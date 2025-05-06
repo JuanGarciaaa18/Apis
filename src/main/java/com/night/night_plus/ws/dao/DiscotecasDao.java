@@ -1,10 +1,10 @@
 package com.night.night_plus.ws.dao;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import com.night.night_plus.ws.utilidades.DiscotecasUtilidades;
 import com.night.night_plus.ws.vo.DiscotecasVo;
-
 
 @Service
 public class DiscotecasDao {
@@ -16,12 +16,13 @@ public class DiscotecasDao {
     public DiscotecasVo consultarPersonaIndividual(String nit) {
         DiscotecasVo discotecasVo = null;
         for (DiscotecasVo p : DiscotecasUtilidades.listaDiscotecas) {
-            if (p.getnit().equals(nit)) {
+            if (p.getNit().equals(nit)) {
                 discotecasVo = new DiscotecasVo();
-                discotecasVo.setnit(p.getnit());
+                discotecasVo.setNit(p.getNit());
                 discotecasVo.setNombre(p.getNombre());
-                discotecasVo.setubicacion(p.getubicacion());
-                discotecasVo.setcapacidad(p.getcapacidad());
+                discotecasVo.setUbicacion(p.getUbicacion());
+                discotecasVo.setCapacidad(p.getCapacidad());
+                discotecasVo.setImagen(p.getImagen()); // Agregar imagen
             }
         }
         return discotecasVo;
@@ -31,21 +32,20 @@ public class DiscotecasDao {
         return (List<DiscotecasVo>) DiscotecasUtilidades.listaDiscotecas;
     }
 
-
     public DiscotecasVo RegistrarDiscoteca(DiscotecasVo discotecasVo) {
-        boolean existe=false;
+        boolean existe = false;
 
         for (DiscotecasVo obj : DiscotecasUtilidades.listaDiscotecas) {
-            if(obj.getubicacion().equals(discotecasVo.getnit())) {
-                existe=true;
+            if (obj.getUbicacion().equals(discotecasVo.getNit())) {
+                existe = true;
                 break;
             }
         }
-        if(existe==false) {
-            discotecasVo.setnit(discotecasVo.getnit());
+        if (!existe) {
+            discotecasVo.setNit(discotecasVo.getNit());
             DiscotecasUtilidades.listaDiscotecas.add(discotecasVo);
             return discotecasVo;
-        }else {
+        } else {
             return null;
         }
     }
@@ -53,11 +53,12 @@ public class DiscotecasDao {
     public DiscotecasVo actualizarDiscoteca(DiscotecasVo Discoteca) {
         DiscotecasVo DiscotecaVo = null;
         for (DiscotecasVo obj : DiscotecasUtilidades.listaDiscotecas) {
-            if (obj.getnit().equals(Discoteca.getnit())) {
-                obj.setnit(Discoteca.getnit());
+            if (obj.getNit().equals(Discoteca.getNit())) {
+                obj.setNit(Discoteca.getNit());
                 obj.setNombre(Discoteca.getNombre());
-                obj.setubicacion(Discoteca.getubicacion());
-                obj.setcapacidad(Discoteca.getcapacidad());
+                obj.setUbicacion(Discoteca.getUbicacion());
+                obj.setCapacidad(Discoteca.getCapacidad());
+                obj.setImagen(Discoteca.getImagen()); // Actualizar imagen
                 DiscotecaVo = obj;
                 break;
             }
@@ -67,11 +68,10 @@ public class DiscotecasDao {
 
     public void eliminarPersona(DiscotecasVo Discoteca) {
         for (DiscotecasVo obj : DiscotecasUtilidades.listaDiscotecas) {
-            if (obj.getnit().equals(Discoteca.getnit())) {
+            if (obj.getNit().equals(Discoteca.getNit())) {
                 DiscotecasUtilidades.listaDiscotecas.remove(obj);
                 break;
             }
         }
     }
 }
-

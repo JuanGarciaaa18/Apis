@@ -2,27 +2,29 @@ package com.night.night_plus.ws.vo;
 
 public class DiscotecasVo {
 
-    private String nit; 
+    private String nit;
     private String nombre;
     private String ubicacion;
     private int capacidad;
+    private String imagen; // Nueva propiedad para la imagen
 
-    public DiscotecasVo(String nit, String nombre, String ubicacion, int capacidad) {
+    public DiscotecasVo(String nit, String nombre, String ubicacion, int capacidad, String imagen) {
         super();
         this.nit = nit;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
+        this.imagen = imagen;
     }
 
     public DiscotecasVo() {
     }
 
-    public String getnit() {
+    public String getNit() {
         return nit;
     }
 
-    public void setnit(String nit) {
+    public void setNit(String nit) {
         this.nit = nit;
     }
 
@@ -34,18 +36,27 @@ public class DiscotecasVo {
         this.nombre = nombre;
     }
 
-    public String getubicacion() {
+    public String getUbicacion() {
         return ubicacion;
     }
 
-    public void setubicacion(String ubicacion) {
+    public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
-    public int getcapacidad() {
+
+    public int getCapacidad() {
         return capacidad;
     }
 
-    public void setcapacidad(int capacidad) {
+    public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }
