@@ -10,10 +10,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // Permitir solicitudes CORS desde cualquier origen
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173")  // Ajusta a la URL de tu frontend
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins("https://nightplus.vercel.app") // URL de tu frontend React
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*");
     }
 }
