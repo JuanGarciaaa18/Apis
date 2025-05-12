@@ -15,8 +15,8 @@ public class DiscotecasUtilidades {
 
     public static void iniciarLista() {
         if (bandera == 0) {
-            listaDiscotecas.add(new DiscotecasVo("111", "Fonda La Floresta", "calle 30", 300, "imagenes/fonda_la_floresta.jpg"));
-            listaDiscotecas.add(new DiscotecasVo("222", "Tropical Club", "cr 14 calle 12", 250, "imagenes/tropical_club.jpg"));
+            listaDiscotecas.add(new DiscotecasVo("111", "Fonda La Floresta", "calle 30", 300, "./src/assets/Icons/juanjo.webp"));
+            listaDiscotecas.add(new DiscotecasVo("222", "Tropical Club", "cr 14 calle 12", 250, "./src/assets/Icons/juanjo.webp "));
             bandera = 1;
         }
     }

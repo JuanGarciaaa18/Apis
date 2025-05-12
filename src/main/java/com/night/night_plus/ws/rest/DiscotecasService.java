@@ -1,110 +1,54 @@
 package com.night.night_plus.ws.rest;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.night.night_plus.ws.dao.DiscotecasDao;
-import com.night.night_plus.ws.vo.DiscotecasVo;
+import com.night.night_plus.ws.entity.Discoteca;
 
 @RestController
 @RequestMapping("/servicio")
 public class DiscotecasService {
 
-    @Autowired(required = true)
-    private DiscotecasDao DiscotecasDao;
-
-    private static final String DIRECTORIO_IMAGENES = "imagenes/";
-
-    @GetMapping("hola")
-    public String saludo() {
-        return "Este es el saludo de Discoteca web";
-    }
+    @Autowired
+    private DiscotecasDao discotecasDao;
 
     @GetMapping("discotecas")
-    public ResponseEntity<DiscotecasVo> getDiscoteca(
-            @RequestParam(value = "id", defaultValue = "0") String nit) {
-
-        DiscotecasVo discotecas = DiscotecasDao.consultarPersonaIndividual(nit);
-
-        if (discotecas == null) {
-            discotecas = new DiscotecasVo();
+    public ResponseEntity<Discoteca> getDiscoteca(@RequestParam(value = "id", defaultValue = "0") String nit) {
+        Discoteca discoteca = discotecasDao.consultarDiscotecaIndividual(nit);
+        if (discoteca == null) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(discotecas);
+        return ResponseEntity.ok(discoteca);
     }
 
     @GetMapping("discotecas-list")
-    public ResponseEntity<List<DiscotecasVo>> getDiscotecalist() {
-        List<DiscotecasVo> discotecas = DiscotecasDao.obtenerlistaDiscotecas();
+    public ResponseEntity<List<Discoteca>> getDiscotecaList() {
+        List<Discoteca> discotecas = discotecasDao.obtenerListaDiscotecas();
         return ResponseEntity.ok(discotecas);
     }
 
     @PostMapping("guardar")
-    public ResponseEntity<DiscotecasVo> RegistrarDiscoteca(@RequestBody DiscotecasVo Discoteca) {
-
-        DiscotecasVo midiscoteca = DiscotecasDao.RegistrarDiscoteca(Discoteca);
-        if (midiscoteca != null) {
-            return ResponseEntity.ok(midiscoteca);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Discoteca> registrarDiscoteca(@RequestBody Discoteca discoteca) {
+        Discoteca nuevaDiscoteca = discotecasDao.registrarDiscoteca(discoteca);
+        return ResponseEntity.ok(nuevaDiscoteca);
     }
 
     @PutMapping("actualizar")
-    public ResponseEntity<DiscotecasVo> actualizarUsuario(@RequestBody DiscotecasVo Discoteca) {
-
-        DiscotecasVo midiscoteca = null;
-        if (DiscotecasDao.consultarPersonaIndividual(Discoteca.getNit()) != null) {
-            midiscoteca = DiscotecasDao.actualizarDiscoteca(Discoteca);
-            if (midiscoteca != null) {
-                return ResponseEntity.ok(midiscoteca);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } else {
+    public ResponseEntity<Discoteca> actualizarDiscoteca(@RequestBody Discoteca discoteca) {
+        Discoteca discotecaActualizada = discotecasDao.actualizarDiscoteca(discoteca);
+        if (discotecaActualizada == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(discotecaActualizada);
     }
 
     @DeleteMapping("eliminar/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable String id) {
-        DiscotecasVo miPersona = DiscotecasDao.consultarPersonaIndividual(id);
-        if (miPersona != null) {
-            DiscotecasDao.eliminarPersona(miPersona);
-            return ResponseEntity.ok(null);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping("subir-imagen/{nit}")
-    public ResponseEntity<String> subirImagen(@PathVariable String nit, @RequestParam("archivo") MultipartFile archivo) {
-        DiscotecasVo discoteca = DiscotecasDao.consultarPersonaIndividual(nit);
-        if (discoteca == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Discoteca no encontrada");
-        }
-
-        try {
-            File directorio = new File(DIRECTORIO_IMAGENES);
-            if (!directorio.exists()) {
-                directorio.mkdirs();
-            }
-
-            String rutaArchivo = DIRECTORIO_IMAGENES + archivo.getOriginalFilename();
-            archivo.transferTo(new File(rutaArchivo));
-
-            discoteca.setImagen(rutaArchivo);
-            DiscotecasDao.actualizarDiscoteca(discoteca);
-
-            return ResponseEntity.ok("Imagen subida correctamente: " + rutaArchivo);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir la imagen");
-        }
+    public ResponseEntity<Void> eliminarDiscoteca(@PathVariable String id) {
+        discotecasDao.eliminarDiscoteca(id);
+        return ResponseEntity.ok().build();
     }
 }

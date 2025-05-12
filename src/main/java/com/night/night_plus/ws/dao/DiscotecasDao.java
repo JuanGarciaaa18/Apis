@@ -2,76 +2,40 @@ package com.night.night_plus.ws.dao;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.night.night_plus.ws.utilidades.DiscotecasUtilidades;
-import com.night.night_plus.ws.vo.DiscotecasVo;
+
+import com.night.night_plus.ws.entity.Discoteca;
+import com.night.night_plus.ws.repository.DiscotecaRepository;
 
 @Service
 public class DiscotecasDao {
 
-    public DiscotecasDao() {
-        DiscotecasUtilidades.iniciarLista();
+    @Autowired
+    private DiscotecaRepository discotecaRepository;
+
+    public Discoteca consultarDiscotecaIndividual(String nit) {
+        return discotecaRepository.findById(nit).orElse(null);
     }
 
-    public DiscotecasVo consultarPersonaIndividual(String nit) {
-        DiscotecasVo discotecasVo = null;
-        for (DiscotecasVo p : DiscotecasUtilidades.listaDiscotecas) {
-            if (p.getNit().equals(nit)) {
-                discotecasVo = new DiscotecasVo();
-                discotecasVo.setNit(p.getNit());
-                discotecasVo.setNombre(p.getNombre());
-                discotecasVo.setUbicacion(p.getUbicacion());
-                discotecasVo.setCapacidad(p.getCapacidad());
-                discotecasVo.setImagen(p.getImagen()); // Agregar imagen
-            }
+    public List<Discoteca> obtenerListaDiscotecas() {
+        return discotecaRepository.findAll();
+    }
+
+    public Discoteca registrarDiscoteca(Discoteca discoteca) {
+        return discotecaRepository.save(discoteca);
+    }
+
+    public Discoteca actualizarDiscoteca(Discoteca discoteca) {
+        if (discotecaRepository.existsById(discoteca.getNit())) {
+            return discotecaRepository.save(discoteca);
         }
-        return discotecasVo;
+        return null;
     }
 
-    public List<DiscotecasVo> obtenerlistaDiscotecas() {
-        return (List<DiscotecasVo>) DiscotecasUtilidades.listaDiscotecas;
-    }
-
-    public DiscotecasVo RegistrarDiscoteca(DiscotecasVo discotecasVo) {
-        boolean existe = false;
-
-        for (DiscotecasVo obj : DiscotecasUtilidades.listaDiscotecas) {
-            if (obj.getUbicacion().equals(discotecasVo.getNit())) {
-                existe = true;
-                break;
-            }
-        }
-        if (!existe) {
-            discotecasVo.setNit(discotecasVo.getNit());
-            DiscotecasUtilidades.listaDiscotecas.add(discotecasVo);
-            return discotecasVo;
-        } else {
-            return null;
-        }
-    }
-
-    public DiscotecasVo actualizarDiscoteca(DiscotecasVo Discoteca) {
-        DiscotecasVo DiscotecaVo = null;
-        for (DiscotecasVo obj : DiscotecasUtilidades.listaDiscotecas) {
-            if (obj.getNit().equals(Discoteca.getNit())) {
-                obj.setNit(Discoteca.getNit());
-                obj.setNombre(Discoteca.getNombre());
-                obj.setUbicacion(Discoteca.getUbicacion());
-                obj.setCapacidad(Discoteca.getCapacidad());
-                obj.setImagen(Discoteca.getImagen()); // Actualizar imagen
-                DiscotecaVo = obj;
-                break;
-            }
-        }
-        return DiscotecaVo;
-    }
-
-    public void eliminarPersona(DiscotecasVo Discoteca) {
-        for (DiscotecasVo obj : DiscotecasUtilidades.listaDiscotecas) {
-            if (obj.getNit().equals(Discoteca.getNit())) {
-                DiscotecasUtilidades.listaDiscotecas.remove(obj);
-                break;
-            }
+    public void eliminarDiscoteca(String nit) {
+        if (discotecaRepository.existsById(nit)) {
+            discotecaRepository.deleteById(nit);
         }
     }
 }
