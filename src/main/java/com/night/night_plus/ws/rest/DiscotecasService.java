@@ -28,7 +28,7 @@ public class DiscotecasService {
     }
 
     // Obtener la lista de todas las discotecas
-    @GetMapping("discotecas")
+    @GetMapping("discotecas-list")
     public ResponseEntity<List<Discoteca>> getDiscotecaList() {
         List<Discoteca> discotecas = discotecasDao.obtenerListaDiscotecas();
         return ResponseEntity.ok(discotecas);
