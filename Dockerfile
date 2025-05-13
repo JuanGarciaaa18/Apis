@@ -1,20 +1,23 @@
-# Etapa 1: Compilar el proyecto
+# Etapa 1: Build del proyecto
 FROM eclipse-temurin:17-jdk AS build
 
-# Copiar código fuente al contenedor
+# Copia el código fuente al contenedor
 COPY . /app
 WORKDIR /app
 
-# Construir el JAR
+# Da permisos de ejecución al wrapper de Maven
+RUN chmod +x mvnw
+
+# Compila el proyecto
 RUN ./mvnw clean package -DskipTests
 
-# Etapa 2: Crear imagen final
+# Etapa 2: Imagen final para ejecutar la app
 FROM eclipse-temurin:17-jdk
 
-# Copiar el JAR generado desde la etapa de build
+# Copia el JAR generado desde la etapa build
 COPY --from=build /app/target/nightplus-0.0.1-SNAPSHOT.jar app.jar
 
-# Exponer el puerto
+# Expone el puerto 8080
 EXPOSE 8080
 
 # Comando para ejecutar la app
