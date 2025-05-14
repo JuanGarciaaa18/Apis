@@ -1,24 +1,11 @@
-# Etapa 1: Build del proyecto
-FROM eclipse-temurin:17-jdk AS build
+FROM ubuntu:latest As build
+RUN apt-get update
+RUN apt-get install openjdk-21-jdk -y
+COPY . .
+RUN ./mvnw spring-boot:run  --no-daemon
 
-# Copia el código fuente al contenedor
-COPY . /app
-WORKDIR /app
-
-# Da permisos de ejecución al wrapper de Maven
-RUN chmod +x mvnw
-
-# Compila el proyecto
-RUN ./mvnw clean package -DskipTests
-
-# Etapa 2: Imagen final para ejecutar la app
-FROM eclipse-temurin:17-jdk
-
-# Copia el JAR generado desde la etapa build
-COPY --from=build /app/target/nightplus-0.0.1-SNAPSHOT.jar app.jar
-
-# Expone el puerto 8080
+FROM openjdk:21-jdk-slim
 EXPOSE 8080
+COPY --from=target/*.jar how-much-pay-api-0.0.1.jar app.jar
 
-# Comando para ejecutar la app
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
